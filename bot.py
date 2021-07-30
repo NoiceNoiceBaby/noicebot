@@ -179,7 +179,7 @@ async def on_message(message):
 
 @client.event
 async def on_member_join(member):
-    # varaibles to declare
+    # variables to declare
     channel = client.get_channel(int(welcomechannelID)) # channel id from config/welcomechannel-id as an integer
     # embed
     welcomeEmbed = discord.Embed(title=f"{member.name}#{member.discriminator} welcome to {member.guild}") # creationg an embed for the welcome message 

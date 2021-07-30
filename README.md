@@ -24,6 +24,9 @@ multi-purpose discord bot written using discord.py
 * `nano goodbyechannel-id` copy down your welcome goodbye id in your discord server and paste into this file
 * `nano warns.json` leave this file blank
 * `python3 bot.py` runs the bot
+
+---
+## disclaimer 
 * after running the previous command, you should then invite the bot to your server, so that when the bot joins the server the prefix is assigned 
 * default prefix is `£`
 
