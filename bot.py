@@ -521,5 +521,19 @@ async def cat(ctx):
     # sends content 
     await ctx.channel.send(embed=catEmbed) # sends the embed we just made 
 
+@client.command()
+async def github(ctx):
+    # variables to declare 
+    author = ctx.author
+    bot = client.user
+    botIcon = client.user.avatar_url
+    # embed 
+    githubEmbed = discord.Embed(title=f"source code for {bot.name}#{bot.discriminator}") # creating an embed for the github command
+    githubEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
+    githubEmbed.set_thumbnail(url=botIcon) # adding a thumbnail to the embed
+    githubEmbed.add_field(name="source code", value="https://github.com/NoiceNoiceBaby/noicebot") # adding a field to the embed
+    # sends content
+    await ctx.channel.send(embed=githubEmbed) # sends the embed we just made
+
 # running the bot 
-client.run(token) # inset token in parenthesis
+client.run(token) # client runs the token
