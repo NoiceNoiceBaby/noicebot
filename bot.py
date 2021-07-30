@@ -71,6 +71,11 @@ if os.path.exists(configFiles["botToken"]): # for bot token
         # variables to declare 
         global token
         token = bottokenconfigFile.read().strip('\n')
+else:
+    # error message
+    print(f"the config/bot-token file is missing, please create it or comment out this code")
+    # exit
+    sys.exit()
 
 if os.path.exists(configFiles["welcomeID"]): # for welcome message
     # reading file
@@ -78,6 +83,11 @@ if os.path.exists(configFiles["welcomeID"]): # for welcome message
         # variables to declare 
         global welcomechannelID
         welcomechannelID = welcomeidFile.read().strip('\n')
+else:
+    # error message
+    print(f"the config/welcomechannel-id file is missing, please create it out comment out this code")
+    # exit 
+    sys.exit()
 
 if os.path.exists(configFiles["goodbyeID"]): # for goodbye message
     # reading file
@@ -85,11 +95,10 @@ if os.path.exists(configFiles["goodbyeID"]): # for goodbye message
         # variables to declare 
         global goodbyechannelID
         goodbyechannelID = goodbyeidFile.read().strip('\n')
-
 else:
     # error message
-    print(f"the config/bot-token file is missing, please create it or comment out this code")
-    # exit
+    print(f"the config/goodbyechannel-id file is missing, please create it out comment out this code")
+    # exit 
     sys.exit()
 
 if os.path.exists(configFiles["apiKey"]): # for dog command
