@@ -31,4 +31,4 @@ multi-purpose discord bot written using discord.py
 
 ---
 ## license 
-Licensed under the GPLv3: http://www.gnu.org/licenses/gpl-3.0.html
+licensed under the GPLv3: http://www.gnu.org/licenses/gpl-3.0.html
