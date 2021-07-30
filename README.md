@@ -9,7 +9,7 @@ multi-purpose discord bot written using discord.py
 
 ---
 ## install and setup
-* `git clone https://github.com/noicenoicebaby/noicebot.git`
+* `git clone https://github.com/NoiceNoiceBaby/noicebot.git`
 * `cd noicebot/` changes directory to noicebot
 * `mkdir config/` for confidential files
 * cd `config/` changes directory to config
