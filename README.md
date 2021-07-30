@@ -8,7 +8,11 @@ multi-purpose discord bot written using discord.py
 * a `config` folder
 
 ---
-## install and setup
+## installing discord.py
+* Linux: `python3 -m pip install -U discord.py`
+* Windows: `py -3 -m pip install -U discord.py`
+
+## bot install and setup
 * `git clone https://github.com/noicenoicebaby/noicebot.git`
 * `cd noicebot/` changes directory to noicebot
 * `mkdir config/` for confidential files
@@ -16,9 +20,6 @@ multi-purpose discord bot written using discord.py
 * `nano api-key` copy down your API key that you were given by https://thedogapi.com/ or https://thecatapi.com/ and paste into the file
 * `nano bot-token` copy down you bot token that you were give in the discord developer portal and paste into the file
 * `nano warns.json` leave this file blank
-* installing `discord.py`:
-    *Linux: `python3 -m pip install -U discord.py`
-    *Windows: `py -3 -m pip install -U discord.py`
 * `python3 bot.py` runs the bot
 * after running the previous command, you should then invite the bot to your server, so that when the bot joins the server the prefix is assigned 
 * default prefix is `£`
