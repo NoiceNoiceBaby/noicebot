@@ -7,7 +7,7 @@ import os # for reading and importing files
 import sys # for exit 
 import json # importing json for custom prefixes and warning system
 import random # for 8ball command 
-import asyncio # for mute 
+import asyncio # for mute command
 
 # intents 
 intents = discord.Intents.default()
