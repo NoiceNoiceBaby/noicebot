@@ -47,7 +47,9 @@ responses = [ # for the magic 8ball command
 
 configFiles = { # for reading config files
     "botToken" : "config/bot-token",
-    "apiKey" : "config/api-key"
+    "apiKey" : "config/api-key",
+    "welcomeID" : "config/welcomechannel-id",
+    "goodbyeID" : "config/goodbyechannel-id"
 }
 
 mutedTime = { # for the mute command
@@ -69,6 +71,21 @@ if os.path.exists(configFiles["botToken"]): # for bot token
         # variables to declare 
         global token
         token = bottokenconfigFile.read().strip('\n')
+
+if os.path.exists(configFiles["welcomeID"]): # for welcome message
+    # reading file
+    with open(configFiles["welcomeID"], "r") as welcomeidFile:
+        # variables to declare 
+        global welcomechannelID
+        welcomechannelID = welcomeidFile.read().strip('\n')
+
+if os.path.exists(configFiles["goodbyeID"]): # for goodbye message
+    # reading file
+    with open(configFiles["goodbyeID"], "r") as goodbyeidFile:
+        # variables to declare 
+        global goodbyechannelID
+        goodbyechannelID = goodbyeidFile.read().strip('\n')
+
 else:
     # error message
     print(f"the config/bot-token file is missing, please create it or comment out this code")
@@ -163,7 +180,7 @@ async def on_message(message):
 @client.event
 async def on_member_join(member):
     # varaibles to declare
-    channel = client.get_channel(781930035824296017) # enter the channel id in which you want the welcome message to be sent
+    channel = client.get_channel(int(welcomechannelID)) # channel id from config/welcomechannel-id as an integer
     # embed
     welcomeEmbed = discord.Embed(title=f"{member.name}#{member.discriminator} welcome to {member.guild}") # creationg an embed for the welcome message 
     welcomeEmbed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url) # adding an author to the embed
@@ -173,7 +190,7 @@ async def on_member_join(member):
 @client.event
 async def on_member_remove(member):
     # variables to declare
-    channel = client.get_channel(870459630457880666) # enter the channel id in which you want the goodbye message to be sent
+    channel = client.get_channel(int(goodbyechannelID)) # channel id from config/goodbyechannel-id as an integer
     # embed
     goodbyeEmbed = discord.Embed(title=f"{member.name}#{member.discriminator} has left {member.guild}") # creationg an embed for the welcome message 
     goodbyeEmbed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url) # adding an author to the embed

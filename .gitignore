@@ -1,3 +1,5 @@
 config/api-key
 config/bot-token
 config/warns.json
+config/welcomechannel-id
+config/goodbyechannel-id
