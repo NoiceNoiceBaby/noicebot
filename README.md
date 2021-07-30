@@ -5,9 +5,15 @@ multi-purpose discord bot written using discord.py
 ## requirements
 * `python3`
 * `discord.py`
-* a `config` folder
+* a `config/` folder
 
 ---
+## installing discord.py
+* Linux: `python3 -m pip install -U discord.py`
+* Windows: `py -3 -m pip install -U discord.py`
+
+---
+<<<<<<< HEAD
 ## installing discord.py
 * Linux: `python3 -m pip install -U discord.py`
 * Windows: `py -3 -m pip install -U discord.py`
