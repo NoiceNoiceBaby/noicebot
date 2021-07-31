@@ -33,7 +33,7 @@ multi-purpose discord bot written using discord.py
 ---
 ## credits 
 * https://thedogapi.com/ and https://thecatapi.com/ for animal pictures 
-* https://github.com/gentutu/bestbot for code (checking for files, cat and dog API)
+* https://github.com/gentutu/bestbot for code (checking for files, cat and dog API calls)
 * https://github.com/Rapptz/discord.py for the discord.py API wrapper
 
 ---
