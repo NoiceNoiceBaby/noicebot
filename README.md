@@ -16,7 +16,6 @@ multi-purpose discord bot written using discord.py
 ## bot install and setup
 * `git clone https://github.com/noicenoicebaby/noicebot.git`
 * `cd noicebot/` changes directory to noicebot
-* `mkdir config/` for confidential files
 * cd `config/` changes directory to config
 * `nano api-key` copy down your API key that you were given by https://thedogapi.com/ or https://thecatapi.com/ and paste into the file
 * `nano bot-token` copy down you bot token that you were give in the discord developer portal and paste into the file
