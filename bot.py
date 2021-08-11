@@ -36,7 +36,7 @@ async def on_guild_join(guild):
     with open("config/customprefix.json", "w") as p:
         json.dump(prefixes,p)
 
-# lists
+# lists and dictionaries
 responses = [ # for the magic 8ball command
         "it is certain", "it is decidedly so.", "without a doubt",
         "yes - definitely", "you may rely on it", "as I see it, yes",
@@ -49,7 +49,8 @@ configFiles = { # for reading config files
     "botToken" : "config/bot-token",
     "apiKey" : "config/api-key",
     "welcomeID" : "config/welcomechannel-id",
-    "goodbyeID" : "config/goodbyechannel-id"
+    "goodbyeID" : "config/goodbyechannel-id",
+    "wordBlacklist" : "config/blacklist"
 }
 
 mutedTime = { # for the mute command
@@ -85,7 +86,7 @@ if os.path.exists(configFiles["welcomeID"]): # for welcome message
         welcomechannelID = welcomeidFile.read().strip('\n')
 else:
     # error message
-    print(f"the config/welcomechannel-id file is missing, please create it out comment out this code")
+    print(f"the config/welcomechannel-id file is missing, please create it or comment out this code")
     # exit 
     sys.exit()
 
@@ -97,7 +98,7 @@ if os.path.exists(configFiles["goodbyeID"]): # for goodbye message
         goodbyechannelID = goodbyeidFile.read().strip('\n')
 else:
     # error message
-    print(f"the config/goodbyechannel-id file is missing, please create it out comment out this code")
+    print(f"the config/goodbyechannel-id file is missing, please create it or comment out this code")
     # exit 
     sys.exit()
 
@@ -183,7 +184,6 @@ async def on_message(message):
             await message.channel.send(f"the current prefix for this server is {prefix}")
     except:
         pass
-    # sends content
     await client.process_commands(message)
 
 @client.event
@@ -390,12 +390,15 @@ async def avatar(ctx, *, avamember: discord.Member = None):
         # embed
         avatarEmbed = discord.Embed(title=f"avatar of {author.name}#{author.discriminator}") # creating the avatar embed
         avatarEmbed.set_image(url=author.avatar_url) # embedding the author's profile picture
+        avatarEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
         # sends content
         await ctx.send(embed=avatarEmbed) # sends the embed we just made 
     else:
         # embed
+        author = ctx.author
         avatarEmbed = discord.Embed(title=f"avatar of {avamember.name}#{avamember.discriminator}") # creating the avatar embed
         avatarEmbed.set_image(url=avamember.avatar_url) # embedding the user's profile pciture 
+        avatarEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
         # sends content
         await ctx.send(embed=avatarEmbed) # sends the embed we just made 
 
