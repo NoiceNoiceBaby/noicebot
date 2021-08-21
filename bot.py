@@ -513,7 +513,7 @@ async def snipe(ctx):
 async def dog(ctx):
     # variables to declare 
     author = ctx.author
-    dogImage = await dogApi.get(apiKey, random.choice(["jpg", "png", "gif"]))
+    dogImage = await dogApi.get(apiKey, random.choice(["jpg", "gif"]))
     # embed
     dogEmbed = discord.Embed(title="dog") # creating an embed for the dog command 
     dogEmbed.set_image(url=dogImage) # adding an image to the embed
@@ -525,7 +525,7 @@ async def dog(ctx):
 async def cat(ctx):
     # variables to declare 
     author = ctx.author
-    catImage = await catApi.get(apiKey, random.choice(["jpg", "png", "gif"]))
+    catImage = await catApi.get(apiKey, random.choice(["jpg", "gif"]))
     # embed
     catEmbed = discord.Embed(title="cat") # creating an embed for the cat command 
     catEmbed.set_image(url=catImage) # adding an image to the embed
