@@ -1,7 +1,5 @@
 # imports
-import discord # importing API wrapper
-from discord import user # importing API wrapper 
-from discord.client import Client # importing client
+import discord # importing discord.py lib
 from discord.ext import commands # importing commands
 import os # for reading and importing files
 import sys # for exit 
