@@ -3,4 +3,6 @@ config/bot-token
 config/warns.json
 config/welcomechannel-id
 config/goodbyechannel-id
+config/blacklist.json
+config/customprefix.json
 __pycache__

@@ -1,13 +1,17 @@
-# imports
+###################################################################################################################################################
+# IMPORTS
+###################################################################################################################################################
 import discord # importing discord.py lib
 from discord.ext import commands # importing commands
 import os # for reading and importing files
 import sys # for exit 
-import json # importing json for custom prefixes and warning system
+import json # importing json for custom prefixes, warning system and message blacklist system
 import random # for 8ball command 
 import asyncio # for mute command
 
-# intents 
+###################################################################################################################################################
+# BOT SETUP
+###################################################################################################################################################
 intents = discord.Intents.default()
 intents.members = True 
 
@@ -34,7 +38,9 @@ async def on_guild_join(guild):
     with open("config/customprefix.json", "w") as p:
         json.dump(prefixes,p)
 
-# lists and dictionaries
+###################################################################################################################################################
+# LISTS AND DICTIONARIES
+###################################################################################################################################################
 responses = [ # for the magic 8ball command
         "it is certain", "it is decidedly so.", "without a doubt",
         "yes - definitely", "you may rely on it", "as I see it, yes",
@@ -63,7 +69,9 @@ mutedTime = { # for the mute command
     "24h" : 86400
 }
 
-# config file reading
+###################################################################################################################################################
+# FILE CHECKS
+###################################################################################################################################################
 if os.path.exists(configFiles["botToken"]): # for bot token
     # reading file
     with open(configFiles["botToken"], "r") as bottokenconfigFile:
@@ -115,6 +123,12 @@ else:
     # exit
     sys.exit()
 
+# blacklist system
+with open("config/blacklist.json", encoding="utf-8") as blacklistJson: # opening blacklist.json file
+    # varliables to declare
+    global blacklist
+    blacklist = json.load(blacklistJson)
+
 # warning system
 with open("config/warns.json", encoding="utf-8") as warnsJson : # opening warns.json file
     try:
@@ -125,7 +139,9 @@ with open("config/warns.json", encoding="utf-8") as warnsJson : # opening warns.
         warns = {}
         warns["users"] = []
 
-# on ready 
+###################################################################################################################################################
+# ON READY
+###################################################################################################################################################
 @client.event
 async def on_ready():
     # logging in
@@ -136,60 +152,101 @@ async def on_ready():
     # setting presence
     await client.change_presence(status=status, activity=activity) # changes presence for the bot
 
-# help
-@client.command(aliases=["help"])
-async def cmds(ctx):
+###################################################################################################################################################
+# HELP
+###################################################################################################################################################
+@client.command(aliases=["cmd"])
+async def help(ctx, *, choice = None):
     # variables to declare
     author = ctx.author
     channel = await author.create_dm() # creates a DM with the context author 
     with open("config/customprefix.json", "r") as p: # opens the customprefix json file 
         prefixes = json.load(p) # loads the customprefix json file 
     prefix = prefixes[str(ctx.guild.id)]
-    # embed
-    helpEmbed = discord.Embed(title='***HELP***') # creating an embed for the help command 
-    helpEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
-    helpEmbed.set_thumbnail(url=author.avatar_url) # adding an thumbnail to the embed
-    helpEmbed.add_field(name="ping", value=f"type {prefix}ping to see the bot latency!", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="prefix", value="if you want to see the current prefix, ping the bot!", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="avatar", value=f"type {prefix}avatar, or {prefix}av, to get your own avatar embedd, or you can ping another server member as an argument, for their avatar!", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="8ball", value=f"type {prefix}8ball and a question to ask the magic 8 ball!", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="dog", value=f"type {prefix}dog(e) to get a random image of a a dog, credit to https://thedogapi.com", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="cat", value=f"type {prefix}cat to get a random image of a a cat, credit to https://thecatapi.com", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="userinfo", value=f"type {prefix}userinfo to get info about yourself, or you can ping another member of the server as an argument, to find info about them!", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="serverinfo", value=f"type {prefix}serverinfo to get info about your server!", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="botinfo", value=f"type {prefix}botinfo to get info about my bot!", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="mute", value=f"type {prefix}mute, the user, then the time, then a reason, or not, to mute a member form your server! (automatic unmuting)") # adding a field to the embed
-    helpEmbed.add_field(name="unmute", value=f"type {prefix}unmute, the user, to unmute a member from your server! (only needed if automatic unmute fails)") # adding a field to the embed
-    helpEmbed.add_field(name="changeprefix", value=f"type {prefix}changeprefix, then give an argument (this will be your new prefix)!", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="ban", value=f"type {prefix}ban, the user, then a reason, or not, to ban a member from your server!") # adding a field to the embed
-    helpEmbed.add_field(name="unban", value=f"type {prefix}unban, the banned user's name and discriminator seperated by '#', to unban a member from your server!") # adding a field to the embed
-    helpEmbed.add_field(name="kick", value=f"type {prefix}kick, the user, then a reason, or not, to kick a member from your server!", inline = False) # adding a field to the embed
-    helpEmbed.add_field(name="warn", value=f"type {prefix}warn, the user, then a reason, or not, to warn a member of your server!") # adding a field to the embed
-    helpEmbed.add_field(name="warnings", value=f"tpye {prefix}warnings, the user, to find out the amount of warnings a user has, if no embed is sent, the user has no warns") # adding a field to the embed
-    # sends content 
-    await channel.send(embed=helpEmbed) # DMs the embed we just made  
 
-# events
+    if (choice == None):
+        # embed
+        helpEmbed = discord.Embed(title='***HELP***') # creating an embed for the help command
+        helpEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
+        helpEmbed.set_thumbnail(url=author.avatar_url) # adding an thumbnail to the embed
+        helpEmbed.add_field(name="ping", value=f"type {prefix}ping to see the bot latency!", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="dog", value=f"type {prefix}dog(e) to get a random image of a a dog, credit to https://thedogapi.com", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="cat", value=f"type {prefix}cat to get a random image of a a cat, credit to https://thecatapi.com", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="userinfo", value=f"type {prefix}userinfo to get info about yourself, or you can ping another member of the server as an argument, to find info about them!", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="serverinfo", value=f"type {prefix}serverinfo to get info about your server!", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="botinfo", value=f"type {prefix}botinfo to get info about my bot!", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="kick", value=f"type {prefix}kick, the user, then a reason, or not, to kick a member from your server!", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="avatar", value=f"type {prefix}avatar, or {prefix}av, to get your own avatar embedd, or you can ping another server member as an argument, for their avatar!", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="8ball", value=f"type {prefix}8ball and a question to ask the magic 8 ball!", inline = False) # adding a field to the embed
+        # sends content 
+        await ctx.channel.send(embed=helpEmbed) # sends the embed we just made
+    elif choice == "prefix":
+        # embed
+        helpEmbed = discord.Embed(title='***HELP***') # creating an embed for the help command
+        helpEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
+        helpEmbed.set_thumbnail(url=author.avatar_url) # adding an thumbnail to the embed
+        helpEmbed.add_field(name="prefix", value=f"type {prefix}prefix to see the prefix", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="changeprefix", value=f"type {prefix}changeprefix, then give an argument (this will be your new prefix)!", inline = False) # adding a field to the embed
+        # sends content 
+        await ctx.channel.send(embed=helpEmbed) # sends the embed we just made
+    elif choice == "mute":
+        # embed
+        helpEmbed = discord.Embed(title='***HELP***') # creating an embed for the help command
+        helpEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
+        helpEmbed.set_thumbnail(url=author.avatar_url) # adding an thumbnail to the embed
+        helpEmbed.add_field(name="mute", value=f"type {prefix}mute, the user, then the time, then a reason, or not, to mute a member form your server! (automatic unmuting)", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="unmute", value=f"type {prefix}unmute, the user, to unmute a member from your server! (only needed if automatic unmute fails)", inline = False) # adding a field to the embed
+        # sends content 
+        await ctx.channel.send(embed=helpEmbed)
+    elif choice == "ban":
+        # embed 
+        helpEmbed = discord.Embed(title='***HELP***') # creating an embed for the help command
+        helpEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
+        helpEmbed.set_thumbnail(url=author.avatar_url) # adding an thumbnail to the embed
+        helpEmbed.add_field(name="ban", value=f"type {prefix}ban, the user, then a reason, or not, to ban a member from your server!", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="unban", value=f"type {prefix}unban, the banned user's name and discriminator seperated by '#', to unban a member from your server!", inline = False) # adding a field to the embed
+        # sends content 
+        await ctx.channel.send(embed=helpEmbed)
+    elif choice == "warn":
+        # embed 
+        helpEmbed = discord.Embed(title='***HELP***') # creating an embed for the help command
+        helpEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
+        helpEmbed.set_thumbnail(url=author.avatar_url) # adding an thumbnail to the embed
+        helpEmbed.add_field(name="warn", value=f"type {prefix}warn, the user, then a reason, or not, to warn a member of your server!", inline = False) # adding a field to the embed
+        helpEmbed.add_field(name="warnings", value=f"tpye {prefix}warnings, the user, to find out the amount of warnings a user has, if no embed is sent, the user has no warns", inline = False) # adding a field to the embed
+        # sends content 
+        await channel.send(embed=helpEmbed)
+
+###################################################################################################################################################
+# EVENTS
+###################################################################################################################################################
 @client.event
 async def on_message(message):
-    try:
-        if message.mentions[0] == client.user:
-            with open("config/customprefix.json", "r") as p:
-                prefixes = json.load(p)
-            # variables to declare
-            prefix = prefixes[str(message.guild.id)] 
-
-            await message.channel.send(f"the current prefix for this server is {prefix}")
-    except:
-        pass
-    await client.process_commands(message)
+    # variables to declare
+    messageAllowed = True
+    for word in blacklist:
+        currentMessage = message.content.lower()
+        if word in currentMessage.replace(" ", ""):
+            await message.delete()
+            # variables to declare 
+            author = message.author
+            channel = await message.author.create_dm()
+            messageAllowed = False
+            # embed
+            blacklistEmbed = discord.Embed(title="your message was deleted!") # creating an embed for the blacklist message
+            blacklistEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed 
+            blacklistEmbed.add_field(name="message sent:", value=f"{word}") # adding a field to the embed 
+            # sends content 
+            await channel.send(embed=blacklistEmbed) # sends the embed we just made
+    else:
+        await client.process_commands(message)
 
 @client.event
 async def on_member_join(member):
     # variables to declare
     channel = client.get_channel(int(welcomechannelID)) # channel id from config/welcomechannel-id as an integer
     # embed
-    welcomeEmbed = discord.Embed(title=f"{member.name}#{member.discriminator} welcome to {member.guild}") # creationg an embed for the welcome message 
+    welcomeEmbed = discord.Embed(title=f"{member.name}#{member.discriminator} welcome to {member.guild}") # creating an embed for the welcome message 
     welcomeEmbed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url) # adding an author to the embed
     # sends content
     await channel.send(embed=welcomeEmbed) # sends the embed we just made 
@@ -199,7 +256,7 @@ async def on_member_remove(member):
     # variables to declare
     channel = client.get_channel(int(goodbyechannelID)) # channel id from config/goodbyechannel-id as an integer
     # embed
-    goodbyeEmbed = discord.Embed(title=f"{member.name}#{member.discriminator} has left {member.guild}") # creationg an embed for the welcome message 
+    goodbyeEmbed = discord.Embed(title=f"{member.name}#{member.discriminator} has left {member.guild}") # creating an embed for the welcome message 
     goodbyeEmbed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url) # adding an author to the embed
     # sends content
     await channel.send(embed=goodbyeEmbed) # sends the embed we just made 
@@ -214,20 +271,46 @@ async def on_message_delete(message):
         # variables to declare
         client.sniped_messages[message.guild.id] = (message.content,message.author, message.channel.name, message.created_at) # on message delete, this info is sniped 
 
-# moderation commands
+###################################################################################################################################################
+# MODERATION COMMANDS
+###################################################################################################################################################
 @client.command()
 @commands.has_permissions(administrator=True, manage_guild=True) # permissions check 
-async def changeprefix(ctx, prefix):
-    with open("config/customprefix.json", "r") as p: # opens the customprefix json file 
-        prefixes = json.load(p) # loads the customprefix json file 
+async def changeprefix(ctx, newPrefix):
+    with open("config/customprefix.json", "r") as p: # opens the customprefix.json file 
+        prefixes = json.load(p) # loading custom prefixes
     
     # variables to declare
-    prefixes[str(ctx.guild.id)] = prefix # defualt prefix
+    previousPrefix = prefixes[str(ctx.guild.id)] # old prefix for embed 
+    prefixes[str(ctx.guild.id)] = newPrefix # new prefix for json and embed
+    author = ctx.author 
     
-    with open("config/customprefix.json", "w") as p:
-        json.dump(prefixes, p)
-    # sends content
-    await ctx.channel.send(f"{ctx.author} changed the prefix for this server to {prefix}")
+    with open("config/customprefix.json", "w") as p: # opens customprefix.json file
+        json.dump(prefixes, p) # writing new prefix to the customprefix.json file
+
+    # embed 
+    changeprefixEmbed = discord.Embed(title=f"{author.name}#{author.discriminator} changed the default prefix") # creating an embed for the change prefix command
+    changeprefixEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # setting an author for the embed 
+    changeprefixEmbed.add_field(name="previous prefix:", value=f"{previousPrefix}") # adding a field to the embed 
+    changeprefixEmbed.add_field(name="new prefix:", value=f"{newPrefix}") # adding a field to the embed 
+    # sends content 
+    await ctx.send(embed=changeprefixEmbed) # sends the embed we just made
+
+@client.command()
+async def prefix(ctx):
+    with open("config/customprefix.json", "r") as p: # opens the customprefix.json
+        # variables to declare
+        prefixes = json.load(p) # loading custom prefixes 
+    # variables to declare
+    prefix = prefixes[str(ctx.guild.id)] # default prefix
+    server = ctx.guild
+    author = ctx.author 
+    # embed 
+    prefixEmbed = discord.Embed(title = f"prefix for {server.name}") # creating an embed for the prefix command
+    prefixEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed 
+    prefixEmbed.add_field(name=f"the prefix is:", value=f"{prefix}") # adding a field to the embed
+    # sends content 
+    await ctx.send(embed=prefixEmbed) # sends the embed we just made
 
 @client.command()
 @commands.has_permissions(administrator=True, kick_members=True) # permissions check
@@ -303,7 +386,6 @@ async def warn(ctx, user: discord.User, *, reason = None):
     await ctx.send(embed=warnEmbed) # sends the embed we just made 
 
 @client.command()
-@commands.has_permissions(administrator=True, kick_members=True, ban_members=True, manage_roles=True) # permissions check
 async def warnings(ctx, user: discord.User):
     for currentMember in warns["users"]:
         if(user.name == currentMember["name"]):
@@ -367,7 +449,9 @@ async def unmute(ctx, member: discord.Member):
     await member.send(embed=manualunmuteEmbed) # DMs the user the embed we just made 
     await ctx.send(embed=manualunmuteEmbed) # sends the embed we just made 
 
-# general commands
+###################################################################################################################################################
+# GENERAL COMMANDS
+###################################################################################################################################################
 @client.command()
 async def ping(ctx):
     # variables to declare
@@ -545,5 +629,22 @@ async def github(ctx):
     # sends content
     await ctx.channel.send(embed=githubEmbed) # sends the embed we just made
 
-# running the bot 
+###################################################################################################################################################
+# ERROR HANDLING
+###################################################################################################################################################
+@client.event
+async def on_command_error(ctx, error):
+    # missing permissions 
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("error - missing permissiosn. contact a server administrator if you believe this is an error.")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("error - missing arguments. use the help command to fix this error.")
+
+###################################################################################################################################################
+# RUNNING BOT
+###################################################################################################################################################
 client.run(token) # client runs the token
+
+###################################################################################################################################################
+# END OF FILE
+###################################################################################################################################################
