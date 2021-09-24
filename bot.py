@@ -147,7 +147,7 @@ async def on_ready():
     # logging in
     print(f"logged in as {client.user.name}#{client.user.discriminator}!") # if this message prints, the bot is working
     # variables to declare
-    activity = discord.Game(name="£cmds") # the name of the activity can be changed to anything you like
+    activity = discord.Game(name="£help") # the name of the activity can be changed to anything you like
     status = discord.Status.online # online can be swapped with: "idle", "offline", "dnd (do_not_disturb)"
     # setting presence
     await client.change_presence(status=status, activity=activity) # changes presence for the bot
@@ -155,7 +155,7 @@ async def on_ready():
 ###################################################################################################################################################
 # HELP
 ###################################################################################################################################################
-@client.command(aliases=["cmd"])
+@client.command(aliases=["cmd", "cmds"])
 async def help(ctx, *, choice = None):
     # variables to declare
     author = ctx.author
