@@ -400,7 +400,7 @@ async def warnings(ctx, user: discord.User):
             await ctx.send(embed=warningsEmbed) # sends the embed we just made
 
 @client.command()
-@commands.has_permissions(administrator=True, kick_members=True, ban_members=True, manage_roles=True, manage_messages=True) # permissions check
+@commands.has_permissions(kick_members=True, ban_members=True, manage_roles=True, manage_messages=True) # permissions check
 async def mute(ctx, member: discord.Member, time, *, reason = None):
     # variables to declare 
     server = ctx.guild
@@ -434,7 +434,7 @@ async def mute(ctx, member: discord.Member, time, *, reason = None):
 
 # manual unmute 
 @client.command()
-@commands.has_permissions(administrator=True, kick_members=True, ban_members=True, manage_roles=True, manage_messages=True) # permissions check
+@commands.has_permissions(kick_members=True, ban_members=True, manage_roles=True, manage_messages=True) # permissions check
 async def unmute(ctx, member: discord.Member):
     # variables to declare
     server = ctx.guild
