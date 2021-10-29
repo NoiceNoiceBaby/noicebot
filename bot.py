@@ -636,7 +636,7 @@ async def github(ctx):
 async def on_command_error(ctx, error):
     # missing permissions 
     if isinstance(error, commands.MissingPermissions):
-        await ctx.send("error - missing permissiosn. contact a server administrator if you believe this is an error.")
+        await ctx.send("error - missing permissions. contact a server administrator if you believe this is an error.")
     elif isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("error - missing arguments. use the help command to fix this error.")
 
