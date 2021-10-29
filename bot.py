@@ -235,7 +235,7 @@ async def on_message(message):
             # embed
             blacklistEmbed = discord.Embed(title="your message was deleted!") # creating an embed for the blacklist message
             blacklistEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed 
-            blacklistEmbed.add_field(name="message sent:", value=f"{word}") # adding a field to the embed 
+            blacklistEmbed.add_field(name="message sent:", value=f"{currentMessage}") # adding a field to the embed 
             # sends content 
             await channel.send(embed=blacklistEmbed) # sends the embed we just made
     else:
