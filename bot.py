@@ -313,7 +313,7 @@ async def prefix(ctx):
     await ctx.send(embed=prefixEmbed) # sends the embed we just made
 
 @client.command()
-@commands.has_permissions(administrator=True, kick_members=True) # permissions check
+@commands.has_permissions(kick_members=True) # permissions check
 async def kick(ctx, member : discord.Member, *, reason = None):
     # variables to declare 
     author = ctx.author
@@ -327,7 +327,7 @@ async def kick(ctx, member : discord.Member, *, reason = None):
     await ctx.send(embed=kickEmbed) # sends the embed we just made
 
 @client.command()
-@commands.has_permissions(administrator=True, ban_members=True) # permissions check
+@commands.has_permissions(ban_members=True) # permissions check
 async def ban(ctx, member : discord.Member, *, reason = None):
     # variables to declare 
     author = ctx.author
@@ -341,7 +341,7 @@ async def ban(ctx, member : discord.Member, *, reason = None):
     await ctx.send(embed=banEmbed) # sends the embed we just made
 
 @client.command()
-@commands.has_permissions(administrator=True, ban_members=True) # # permissions check
+@commands.has_permissions(ban_members=True) # # permissions check
 async def unban(ctx, *, member):
     # variables to declare
     author = ctx.author
@@ -362,7 +362,7 @@ async def unban(ctx, *, member):
         await ctx.send(embed=unbanEmbed) # sends the embed we just made
 
 @client.command()
-@commands.has_permissions(administrator=True, kick_members=True, ban_members=True, manage_roles=True) # permissions check
+@commands.has_permissions(kick_members=True, ban_members=True, manage_roles=True) # permissions check
 async def warn(ctx, user: discord.User, *, reason = None):
     for currentMember in warns["users"]:
         if currentMember["name"] == user.name:
@@ -448,6 +448,21 @@ async def unmute(ctx, member: discord.Member):
     # sends content
     await member.send(embed=manualunmuteEmbed) # DMs the user the embed we just made 
     await ctx.send(embed=manualunmuteEmbed) # sends the embed we just made 
+
+@client.command()
+@commands.has_permissions(manage_messages=True) # permissions check
+async def purge(ctx, messageCount: int):
+    # variables to declare
+    author = ctx.author 
+    channel = ctx.channel
+    # purge messages
+    await channel.purge(limit=messageCount)
+    # embed
+    purgeEmbed = discord.Embed(title=f"mass message deletion!") # creating an embed for the purge command
+    purgeEmbed.set_author(name=f"{author.name}#{author.discriminator}", icon_url=author.avatar_url) # adding an author to the embed
+    purgeEmbed.add_field(name=f"messages deleted", value=f"{messageCount}") # adding a field to the embed
+    # sends content
+    await ctx.send(embed=purgeEmbed)
 
 ###################################################################################################################################################
 # GENERAL COMMANDS
